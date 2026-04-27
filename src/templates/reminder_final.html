@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><style>
+body { font-family: Arial, sans-serif; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; }
+.header { background: #1F2937; color: white; padding: 20px; border-radius: 8px 8px 0 0; }
+.body { background: #f9f9f9; padding: 30px; border: 2px solid #1F2937; }
+.amount { font-size: 2em; color: #1F2937; font-weight: bold; }
+.notice { background: #F3F4F6; border-left: 4px solid #1F2937; padding: 15px; margin: 15px 0; }
+.btn { background: #1F2937; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; display: inline-block; margin: 20px 0; }
+.footer { color: #999; font-size: 12px; padding: 15px; text-align: center; }
+</style></head>
+<body>
+<div class="header"><h1>FINAL NOTICE</h1></div>
+<div class="body">
+  <p>Dear {{clientName}},</p>
+  <div class="notice">
+    <strong>FINAL NOTICE</strong><br>
+    Invoice #{{invoiceNumber}} is <strong>30 days overdue</strong>.<br>
+    Amount: <strong>{{currency}} {{amount}}</strong>
+  </div>
+  <p>This is a final notice before I pursue further action. Payment of <strong>{{currency}} {{amount}}</strong> for invoice <strong>#{{invoiceNumber}}</strong> is now 30 days overdue.</p>
+  <p>If payment is not received within 5 business days, I will have no choice but to pursue collection through formal channels, which may include reporting to a collections agency or legal action.</p>
+  {{#if paymentLink}}<a href="{{paymentLink}}" class="btn">Pay Now to Resolve</a>{{/if}}
+  <p>To avoid further action, please remit payment immediately or contact me to make arrangements.</p>
+  <p><strong>{{fromName}}</strong><br>{{fromEmail}}</p>
+</div>
+<div class="footer">Sent via Invoice Chaser</div>
+</body></html>

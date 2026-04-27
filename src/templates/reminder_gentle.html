@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><style>
+body { font-family: Arial, sans-serif; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; }
+.header { background: #4F46E5; color: white; padding: 20px; border-radius: 8px 8px 0 0; }
+.body { background: #f9f9f9; padding: 30px; border: 1px solid #eee; }
+.amount { font-size: 2em; color: #4F46E5; font-weight: bold; }
+.btn { background: #4F46E5; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; display: inline-block; margin: 20px 0; }
+.footer { color: #999; font-size: 12px; padding: 15px; text-align: center; }
+</style></head>
+<body>
+<div class="header"><h1>Payment Reminder</h1></div>
+<div class="body">
+  <p>Hi {{clientName}},</p>
+  <p>I hope this message finds you well! This is a friendly reminder that invoice <strong>#{{invoiceNumber}}</strong> is due today.</p>
+  <div class="amount">{{currency}} {{amount}}</div>
+  <p><strong>Invoice:</strong> #{{invoiceNumber}}<br>
+  <strong>Due Date:</strong> {{dueDate}}<br>
+  {{#if description}}<strong>For:</strong> {{description}}{{/if}}</p>
+  {{#if paymentLink}}<a href="{{paymentLink}}" class="btn">Pay Now</a>{{/if}}
+  <p>If you've already sent payment, please disregard this message. Let me know if you have any questions!</p>
+  <p>Best regards,<br><strong>{{fromName}}</strong></p>
+</div>
+<div class="footer">Sent via Invoice Chaser · <a href="#">Unsubscribe</a></div>
+</body></html>

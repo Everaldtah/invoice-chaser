@@ -1,0 +1,30 @@
+{
+  "name": "invoice-chaser",
+  "version": "1.0.0",
+  "description": "Automated invoice follow-up system with escalating reminders for freelancers and agencies",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "seed": "node src/seed.js"
+  },
+  "keywords": ["invoice", "freelance", "automation", "payments", "saas"],
+  "author": "invoice-chaser",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.19.2",
+    "nodemailer": "^6.9.14",
+    "node-cron": "^3.0.3",
+    "better-sqlite3": "^11.1.2",
+    "dotenv": "^16.4.5",
+    "uuid": "^10.0.0",
+    "handlebars": "^4.7.8",
+    "axios": "^1.7.7"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

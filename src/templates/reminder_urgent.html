@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><style>
+body { font-family: Arial, sans-serif; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; }
+.header { background: #DC2626; color: white; padding: 20px; border-radius: 8px 8px 0 0; }
+.body { background: #f9f9f9; padding: 30px; border: 1px solid #eee; }
+.amount { font-size: 2em; color: #DC2626; font-weight: bold; }
+.overdue { background: #FEE2E2; border: 1px solid #DC2626; padding: 10px 15px; border-radius: 5px; margin: 10px 0; }
+.btn { background: #DC2626; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; display: inline-block; margin: 20px 0; }
+.footer { color: #999; font-size: 12px; padding: 15px; text-align: center; }
+</style></head>
+<body>
+<div class="header"><h1>URGENT: Payment Required</h1></div>
+<div class="body">
+  <p>Hi {{clientName}},</p>
+  <div class="overdue">🚨 Invoice <strong>#{{invoiceNumber}}</strong> is <strong>14 days overdue</strong> and requires immediate attention.</div>
+  <div class="amount">{{currency}} {{amount}}</div>
+  <p>This is my third attempt to collect payment for work completed. I need to resolve this invoice promptly to continue our business relationship.</p>
+  <p>Please arrange payment immediately or contact me directly to discuss payment arrangements.</p>
+  {{#if paymentLink}}<a href="{{paymentLink}}" class="btn">Pay Now</a>{{/if}}
+  <p>Regards,<br><strong>{{fromName}}</strong></p>
+</div>
+<div class="footer">Sent via Invoice Chaser · <a href="#">Unsubscribe</a></div>
+</body></html>
