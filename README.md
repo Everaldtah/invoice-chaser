@@ -1,117 +1,125 @@
-# invoice-chaser
+# Invoice Chaser
 
-> Automated invoice follow-up system with escalating email reminders for freelancers and agencies.
+> Stop losing money to late payments. Invoice Chaser automatically sends payment reminders to clients at exactly the right moment.
+
+---
 
 ## The Problem
 
-Freelancers lose an average of **$50,000/year** to late or unpaid invoices, and the awkward manual follow-up process causes them to under-chase. Most accounting tools (FreshBooks, Wave) have basic reminders — but they're rigid, ugly, and don't escalate intelligently.
+Freelancers and small agencies collectively lose billions annually to late or forgotten payments. Chasing invoices manually is awkward, time-consuming, and often forgotten. Most accounting tools (FreshBooks, QuickBooks) are overpriced and bloated for solo operators.
 
-**invoice-chaser** automates the entire follow-up lifecycle: gentle reminders on due date, firm follow-ups at 7 days, urgent notices at 14 days, and final legal-tone notices at 30 days — all with beautiful HTML emails.
+**Invoice Chaser does one thing well**: it remembers to follow up so you don't have to.
+
+---
 
 ## Features
 
-- **4-level escalating reminders** — tone escalates from friendly → firm → urgent → final notice
-- **Auto-chaser cron job** — runs daily at 9 AM, automatically sends the right level to each overdue invoice
-- **Manual trigger** — trigger any reminder level on demand via API
-- **Client management** — store client contacts and invoice history
-- **Dashboard stats** — total outstanding, overdue amount, reminders sent
-- **Payment link support** — inject a "Pay Now" button into every email
-- **Beautiful HTML templates** — color-coded by urgency level
+- **Automatic Reminders** — Sends email reminders at day 0 (due), +7, +14, +30, +60 days overdue
+- **Escalating Tone** — Friendly → Firm → Final notice, based on how overdue the invoice is
+- **Web Dashboard** — Track all invoices, outstanding amounts, and payment status at a glance
+- **Manual Nudge** — Send an immediate reminder with one click
+- **Mark as Paid** — Keep your records clean
+- **Stats Overview** — Total outstanding, collected, overdue counts
+- **SMTP Email** — Works with Gmail, SendGrid, Mailgun, or any SMTP provider
+
+---
 
 ## Tech Stack
 
-- Node.js 18+ / Express
-- better-sqlite3 (zero-config local DB)
-- Nodemailer (email delivery via SMTP)
-- Handlebars (email templates)
-- node-cron (scheduled auto-chasing)
+- **Backend**: Python 3.11+ / FastAPI
+- **Database**: SQLite (zero-setup, file-based)
+- **Templating**: Jinja2 (server-rendered HTML)
+- **Email**: Python `smtplib` (SMTP)
+- **Scheduling**: Background thread (hourly checks)
+
+---
 
 ## Installation
 
 ```bash
+# 1. Clone the repo
 git clone https://github.com/Everaldtah/invoice-chaser.git
 cd invoice-chaser
-npm install
 
+# 2. Create a virtual environment
+python -m venv venv
+source venv/bin/activate  # Windows: venv\Scripts\activate
+
+# 3. Install dependencies
+pip install -r requirements.txt
+
+# 4. Set up environment variables
 cp .env.example .env
-# Edit .env — configure your SMTP credentials
+# Edit .env with your SMTP credentials
 
-npm start
+# 5. (Optional) Load demo data
+python seed_demo.py
+
+# 6. Start the server
+python main.py
 ```
+
+Open http://localhost:8000 in your browser.
+
+---
 
 ## Usage
 
-### Register your account
-```bash
-curl -X POST http://localhost:3000/users/register \
-  -H "Content-Type: application/json" \
-  -d '{"email": "you@yourdomain.com", "name": "Your Name"}'
-# Returns: { "api_token": "xxx", "user_id": "xxx" }
-```
+### Creating an Invoice
+1. Click **+ New Invoice**
+2. Fill in client name, email, invoice number, amount, and due date
+3. Submit — the system will automatically send reminders as the due date approaches
 
-### Add a client
-```bash
-curl -X POST http://localhost:3000/clients \
-  -H "X-Api-Token: YOUR_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{"name": "Acme Corp", "email": "billing@acme.com", "company": "Acme"}'
-```
+### Manual Reminders
+Click **Remind** next to any unpaid invoice to send an immediate reminder email.
 
-### Create an invoice
-```bash
-curl -X POST http://localhost:3000/invoices \
-  -H "X-Api-Token: YOUR_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "client_id": "CLIENT_ID",
-    "invoice_number": "INV-001",
-    "amount": 2500.00,
-    "due_date": "2026-05-01",
-    "description": "Website redesign — Phase 1"
-  }'
-```
+### Mark as Paid
+Click **Mark Paid** when a client pays — removes it from the outstanding queue.
 
-### Manually send a reminder
-```bash
-curl -X POST http://localhost:3000/invoices/INVOICE_ID/remind \
-  -H "X-Api-Token: YOUR_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{"level": 2}'
-```
+### Email Configuration
+For Gmail:
+1. Enable 2FA on your Google account
+2. Generate an App Password: Google Account → Security → App Passwords
+3. Add to `.env`: `SMTP_USER=you@gmail.com` and `SMTP_PASS=your_app_password`
 
-### View dashboard
-```bash
-curl http://localhost:3000/dashboard -H "X-Api-Token: YOUR_TOKEN"
-```
+---
 
-### Mark invoice as paid
-```bash
-curl -X PATCH http://localhost:3000/invoices/INVOICE_ID/status \
-  -H "X-Api-Token: YOUR_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{"status": "paid"}'
-```
+## API Endpoints
 
-## Reminder Escalation Schedule
+| Method | Path | Description |
+|--------|------|-------------|
+| GET | `/` | Dashboard (HTML) |
+| POST | `/invoices` | Create invoice |
+| POST | `/invoices/{id}/remind` | Send manual reminder |
+| POST | `/invoices/{id}/mark-paid` | Mark invoice as paid |
+| POST | `/invoices/{id}/delete` | Delete invoice |
+| GET | `/api/invoices` | List all invoices (JSON) |
+| GET | `/api/stats` | Get summary stats (JSON) |
 
-| Level | Trigger | Subject Line | Tone |
-|-------|---------|-------------|------|
-| 1 | Due date | "Friendly reminder: Invoice due today" | Warm |
-| 2 | 7 days overdue | "Follow-up: Invoice 7 days overdue" | Firm |
-| 3 | 14 days overdue | "URGENT: Invoice 14 days overdue" | Urgent |
-| 4 | 30 days overdue | "Final notice: payment required" | Legal |
+---
 
 ## Monetization Model
 
-| Plan | Price | Limits |
-|------|-------|--------|
-| Free | $0 | 5 active invoices |
-| Freelancer | $12/mo | 50 invoices, 1 user |
-| Agency | $39/mo | Unlimited invoices, 5 users, white-label emails |
-| Enterprise | $99/mo | Custom SMTP, API access, integrations |
+| Plan | Price | Features |
+|------|-------|----------|
+| **Free** | $0/mo | Up to 5 active invoices |
+| **Solo** | $9/mo | Unlimited invoices, custom email templates |
+| **Agency** | $29/mo | Multiple sender addresses, client portal links, CSV export |
+| **White Label** | $99/mo | Custom branding, custom domain, multi-user |
 
-**Revenue drivers:** Target freelancers, consultants, and small agencies. Integrate with Stripe, QuickBooks, FreshBooks for upsell. "Remind me when invoice is late" is a $0 → paid conversion trigger.
+**LTV projection**: Freelancers earning $50k+/year easily justify $9-29/mo to recover even one late payment per quarter.
 
-## License
+---
 
-MIT
+## Traction Potential
+
+- **TAM**: 59M+ freelancers in the US alone, most using manual invoicing
+- **Pain intensity**: Getting paid late directly impacts cashflow — high urgency problem
+- **Viral loop**: Clients receive reminder emails branded with your tool → referral opportunity
+- **Expansion revenue**: Naturally grows with the user's invoice volume
+
+---
+
+## Environment Variables
+
+See `.env.example` for all configurable options.
